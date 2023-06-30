@@ -8,7 +8,10 @@ const { name } = require('dayjs/locale/ru');
 require('dayjs/locale/ru')
 dayjs.locale('ru')
 
-mongoose.connect('mongodb://127.0.0.1:27017/washing');
+const passwordMongoAtlas = process.env['passwordMongoAtlas'];
+
+mongoose.connect('mongodb+srv://admin:${passwordMongoAtlas}@washingtech.92gfp9u.mongodb.net/washingtech?retryWrites=true&w=majority');
+
 let items = []
 let user = ''
 let unsignStatus = false
