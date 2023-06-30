@@ -8,9 +8,9 @@ const { name } = require('dayjs/locale/ru');
 require('dayjs/locale/ru')
 dayjs.locale('ru')
 
-const passwordMongoAtlas = process.env['passwordMongoAtlas'];
+const passwordMongoAtlas = process.env['passwordMongoAtlas']
 
-mongoose.connect('mongodb+srv://admin:${passwordMongoAtlas}@washingtech.92gfp9u.mongodb.net/washingtech?retryWrites=true&w=majority');
+mongoose.connect(`mongodb+srv://admin:${passwordMongoAtlas}@washingtech.92gfp9u.mongodb.net/washingtech?retryWrites=true&w=majority`);
 
 let items = []
 let user = ''
@@ -297,3 +297,5 @@ bot.catch((err) => {
 })
 
 bot.launch()
+
+require('./server')();
