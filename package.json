@@ -1,0 +1,17 @@
+{
+  "name": "sink",
+  "version": "1.0.0",
+  "description": "sink",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.11.8",
+    "dotenv": "^16.3.1",
+    "mongoose": "^7.3.0",
+    "telegraf": "^4.12.2"
+  }
+}
