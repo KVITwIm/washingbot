@@ -79,12 +79,13 @@ bot.action('watch', async (ctx) => {
     let signsToday = ``
     let signsTomorrow = ``
 
-
     for (let i = 0; i < signs.length; i++) {
         if (dayjs(signs[i].startTime).date() == dayjs().date()) {
             signsToday += `${(signs[i].name)}: ${dayjs(signs[i].startTime).format('HH:mm')}-${dayjs(signs[i].endTime).format('HH:mm')}\n`
         } else if (dayjs(signs[i].startTime).date() == dayjs().date(dayjs().date() + 1).date()) {
             signsTomorrow += `${(signs[i].name)}: ${dayjs(signs[i].startTime).format('HH:mm')}-${dayjs(signs[i].endTime).format('HH:mm')}\n`
+        } else if (dayjs(signs[i].startTime).date() < dayjs().date()) {
+            await signs[i].deleteOne()
         }
     }
     if (signsToday == ``) {
