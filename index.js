@@ -144,7 +144,6 @@ bot.on(message("text"), async (ctx) => {
             ctx.reply("Данной записи не существует.")
         }
     } else if (signStatusToday) {
-        ctx.deleteMessage()
         if (ctx.message.text.indexOf('-') == -1) {
             ctx.reply(`Неверный формат. (пример: 15:00 - 16:00)`)
             return
@@ -219,7 +218,6 @@ bot.on(message("text"), async (ctx) => {
         items = [name, username, firstDate, secondDate, firstNumber, secondNumber]
         return items
     } else if (signStatusTomorrow) {
-        ctx.deleteMessage()
         if (ctx.message.text.indexOf('-') == -1) {
             ctx.reply(`Неверный формат. (пример: 15:00 - 16:00)`)
             return
