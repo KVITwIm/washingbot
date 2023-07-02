@@ -8,7 +8,10 @@ const { name } = require('dayjs/locale/ru');
 require('dayjs/locale/ru')
 dayjs.locale('ru')
 
-mongoose.connect('mongodb://127.0.0.1:27017/washing');
+const passwordMongoAtlas = process.env['passwordMongoAtlas']
+
+mongoose.connect(`mongodb+srv://admin:${passwordMongoAtlas}@washingtech.92gfp9u.mongodb.net/washingtech?retryWrites=true&w=majority`);
+
 let items = []
 let user = ''
 let unsignStatus = false
@@ -64,7 +67,11 @@ bot.action('unsign', async (ctx) => {
     let signs = await Washing.find({ username: ctx.callbackQuery.message.chat.username }).sort({ startTime: 1 })
     let text = ``
     for (let i = 0; i < signs.length; i++) {
-        text += `${i + 1}. ${dayjs(signs[i].startTime).format('DD.MM')}: ${dayjs(signs[i].startTime).format('HH:mm')} - ${dayjs(signs[i].endTime).format('HH:mm')}\n`
+        if (dayjs(signs[i].endTime).format() < dayjs().format()) {
+            await signs[i].deleteOne()
+        } else {
+            text += `${i + 1}. ${dayjs(signs[i].startTime).format('DD.MM')}: ${dayjs(signs[i].startTime).format('HH:mm')} - ${dayjs(signs[i].endTime).format('HH:mm')}\n`
+        }
     }
     ctx.replyWithHTML(`Ваши записи:\n${text}\nНапишите номер, чтобы отменить. (пример: 1)`, Markup.inlineKeyboard([[Markup.button.callback('Назад', 'cancel')]]))
 
@@ -84,7 +91,7 @@ bot.action('watch', async (ctx) => {
             signsToday += `${(signs[i].name)}: ${dayjs(signs[i].startTime).format('HH:mm')}-${dayjs(signs[i].endTime).format('HH:mm')}\n`
         } else if (dayjs(signs[i].startTime).date() == dayjs().date(dayjs().date() + 1).date()) {
             signsTomorrow += `${(signs[i].name)}: ${dayjs(signs[i].startTime).format('HH:mm')}-${dayjs(signs[i].endTime).format('HH:mm')}\n`
-        } else if (dayjs(signs[i].startTime).date() < dayjs().date()) {
+        } else if (dayjs(signs[i].endTime).format() < dayjs().format()) {
             await signs[i].deleteOne()
         }
     }
@@ -192,6 +199,11 @@ bot.on(message("text"), async (ctx) => {
                 ctx.reply(`Данное время уже занято, выберите другое.`)
                 wrong++
                 return
+            } else if (secondDate < dayjs().format()) {
+                console.log(secondDate, dayjs().format())
+                ctx.reply(`Некорректное время, выберите другое.`)
+                wrong++
+                return
             }
         }
 
@@ -294,3 +306,5 @@ bot.catch((err) => {
 })
 
 bot.launch()
+
+require('./server')();
