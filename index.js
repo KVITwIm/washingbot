@@ -8,6 +8,14 @@ const { name } = require('dayjs/locale/ru');
 require('dayjs/locale/ru')
 dayjs.locale('ru')
 
+var utc = require('dayjs/plugin/utc')
+var timezone = require('dayjs/plugin/timezone')
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
+dayjs.tz.setDefault("Russia/Yekaterinburg")
+
 const passwordMongoAtlas = process.env['passwordMongoAtlas']
 
 mongoose.connect(`mongodb+srv://admin:${passwordMongoAtlas}@washingtech.92gfp9u.mongodb.net/washingtech?retryWrites=true&w=majority`);
@@ -199,7 +207,6 @@ bot.on(message("text"), async (ctx) => {
                 wrong++
                 return
             } else if (secondDate < dayjs().format()) {
-                console.log(secondDate, dayjs().format())
                 ctx.reply(`Некорректное время, выберите другое.`)
                 wrong++
                 return
@@ -299,10 +306,14 @@ bot.action('save', async (ctx) => {
     await signToday.save()
 })
 
+bot.command('dev', (ctx) => {
+  ctx.reply("1.21")
+});
+
 bot.catch((err) => {
     console.log('Ooops', err)
 })
 
 bot.launch()
 
-require('./server')();
+require(`./server.js`)
